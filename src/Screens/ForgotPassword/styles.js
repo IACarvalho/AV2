@@ -12,16 +12,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 
-  button: {
-    marginTop: 100,
-    height: 40,
-    width: '60%',
-    alignSelf: 'center',
-  },
-
   form: {
     width: '100%',
-    marginTop: 150,
+    marginTop: 100,
   },
 
   input: {
@@ -30,9 +23,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
-  registerRevocer: {
-    marginTop: 40,
-  }
+  button: {
+    marginTop: 250,
+    height: 40,
+    width: '60%',
+    alignSelf: 'center',
+  },
 })
 
-export default styles
+  export default styles
