@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { View, FlatList } from 'react-native'
 import { Button, Appbar } from 'react-native-paper'
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 import { Ball } from '../../Components/Ball'
 
@@ -8,8 +10,10 @@ import styles from './styles.js'
 
 const Home = ({ navigation }) => {
   const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const handleLogout = () => {
+    auth().signOut()
     navigation.reset({
       index: 0,
       routes: [{ name: 'Login' }],
@@ -54,6 +58,31 @@ const Home = ({ navigation }) => {
     setData(data)
   }
 
+  function handleNewEntry() {
+    setLoading(true)
+
+    firestore()
+      .collection('raffle')
+      .add(
+        {
+          balls: generateBalls(),
+          created_at: firestore.FieldValue.serverTimestamp(),
+        }
+      )
+      .then(() => {
+        generateData()
+      }
+      )
+      .catch(error => {
+        console.log(error)
+      }
+      )
+      .finally(() => {
+        setLoading(false)
+      }
+      )
+  }
+
   return (
     <View style={styles.container}>
       <Appbar.Header style={styles.header}>
@@ -71,7 +100,8 @@ const Home = ({ navigation }) => {
       <Button
         style={styles.button}
         mode='contained'
-        onPress={() => generateData()}
+        loading={loading}
+        onPress={handleNewEntry}
       >
         Sortear
       </Button>

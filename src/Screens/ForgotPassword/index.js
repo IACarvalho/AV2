@@ -1,20 +1,33 @@
 import { useState } from 'react'
-import { View, SafeAreaView} from 'react-native'
-import { Appbar, TextInput, Button} from 'react-native-paper'
+import { View, SafeAreaView, Alert } from 'react-native'
+import { Appbar, TextInput, Button } from 'react-native-paper'
+import auth from '@react-native-firebase/auth'
+import { validateEmailRegex } from '../../Ultils'
 
 import styles from './styles'
 
 const ForgotPassword = ({ navigation }) => {
+  const [email, setEmail] = useState('')
 
   const goBack = () => {
     navigation.goBack()
   }
 
   const handleSendButton = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    })
+    if (!validateEmailRegex(email)) {
+      Alert.alert('Email invalid')
+      return
+    }
+    auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        })
+        console.log('Email sent')
+      }
+      )
   }
 
   return (
@@ -28,12 +41,14 @@ const ForgotPassword = ({ navigation }) => {
         <TextInput
           label="E-mail"
           mode="outlined"
+          value={email}
+          onChangeText={text => setEmail(text)}
           style={styles.input}
         />
         <Button
           mode="contained"
           style={styles.button}
-          onPress={() => handleSendButton()}
+          onPress={handleSendButton}
         >
           Enviar
         </Button>

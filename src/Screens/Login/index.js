@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import {View, SafeAreaView} from 'react-native'
-import {TextInput, Button, Appbar} from 'react-native-paper'
+import { View, SafeAreaView } from 'react-native'
+import { TextInput, Button, Appbar } from 'react-native-paper'
+import auth from '@react-native-firebase/auth'
 
 import styles from './styles'
 
@@ -13,13 +14,24 @@ const Login = ({ navigation }) => {
 
   const handleLogin = () => {
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Home' }],
-      })
-    }, 500)
+    auth().signInWithEmailAndPassword(email, password)
+      .then(() => {
+        setLoading(false)
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        })
+      }
+      )
+      .catch((error) => {
+        setLoading(false)
+        console.log(error)
+      }
+      )
+      .finally(() => {
+        setLoading(false)
+      }
+      )
   }
 
   const handlePasswordVisibility = () => {
@@ -50,7 +62,7 @@ const Login = ({ navigation }) => {
             style={styles.input}
             mode="outlined"
             value={password}
-            secureTextEntry = {passwordIsNotVisible}
+            secureTextEntry={passwordIsNotVisible}
             right={<TextInput.Icon name={icon} onPress={() => handlePasswordVisibility()} />}
             onChangeText={text => setPassword(text)}
           />
@@ -59,7 +71,7 @@ const Login = ({ navigation }) => {
           mode="contained"
           style={styles.button}
           loading={loading}
-          onPress={() => handleLogin()}
+          onPress={handleLogin}
         >
           ENTRAR
         </Button>
