@@ -1,6 +1,9 @@
 import { useState } from 'react'
-import { View, SafeAreaView} from 'react-native'
+import { View, SafeAreaView } from 'react-native'
 import { Button, TextInput, Appbar } from 'react-native-paper'
+import auth from '@react-native-firebase/auth'
+
+import { validateEmailRegex } from '../../Ultils'
 
 import styles from './styles'
 
@@ -11,6 +14,7 @@ const Register = ({ navigation }) => {
   const [repeatPassword, setRepeatPassword] = useState('')
   const [passwordIsNotVisible, setPasswordIsNotValid] = useState(true)
   const [icon, setIcon] = useState('eye')
+  const [loading, setLoading] = useState(false)
 
   const goBack = () => {
     navigation.goBack()
@@ -25,11 +29,47 @@ const Register = ({ navigation }) => {
     setPasswordIsNotValid(!passwordIsNotVisible)
   }
 
+  const validateEmail = () => {
+    if (email !== repeatEmail) {
+      return false
+    }
+    if (email === '') {
+      return false
+    }
+
+    return validateEmailRegex(email)
+  }
+
+  const validaePassword = () => {
+    if (password !== repeatPassword) {
+      return false
+    }
+    if (password.length < 8) {
+      return false
+    }
+    return true
+  }
+
+
   const handleCadButton = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    })
+    setLoading(true)
+    if (validateEmail() && validaePassword()) {
+      auth().createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          setLoading(false)
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          })
+        })
+        .catch(error => {
+          console.log(error)
+        }
+        )
+    } else {
+      setLoading(false)
+      console.log('error')
+    }
   }
 
   return (
@@ -60,7 +100,7 @@ const Register = ({ navigation }) => {
           mode="outlined"
           value={password}
           style={styles.input}
-          secureTextEntry = {passwordIsNotVisible}
+          secureTextEntry={passwordIsNotVisible}
           right={<TextInput.Icon name={icon} onPress={() => handlePasswordVisibility()} />}
           onChangeText={text => setPassword(text)}
         />
@@ -70,7 +110,7 @@ const Register = ({ navigation }) => {
           mode="outlined"
           value={repeatPassword}
           style={styles.input}
-          secureTextEntry = {passwordIsNotVisible}
+          secureTextEntry={passwordIsNotVisible}
           right={<TextInput.Icon name={icon} onPress={() => handlePasswordVisibility()} />}
           onChangeText={text => setRepeatPassword(text)}
         />
@@ -78,7 +118,8 @@ const Register = ({ navigation }) => {
         <Button
           mode="contained"
           style={styles.button}
-          onPress={() => handleCadButton()}
+          loading={loading}
+          onPress={handleCadButton}
         >
           Cadastrar
         </Button>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "301457311546",
+    "project_id": "sorteadornumerico",
+    "storage_bucket": "sorteadornumerico.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301457311546:android:98ca76bd627121799b7203",
+        "android_client_info": {
+          "package_name": "com.sorteadornumerico"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301457311546-m3bail0kj8ghircgv736bsvjfrsj7cpv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEWbK234mzwd9d1cRLO-MyYtuyD3soISE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "301457311546-m3bail0kj8ghircgv736bsvjfrsj7cpv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
